@@ -1,0 +1,20 @@
+# Роли для разработчиков. Разрешено просматривать ресурсы, но не секреты
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: developer-role
+rules:
+  - apiGroups: [ "", "extensions", "apps" ]
+    resources: ["deployments", "pods", "services", "replicasets" ]
+    verbs: [ "get", "list", "watch" ]
+
+---
+# Роли для управляющих кластером. Разрешено просматривать и редактировать ресурсы, но не секреты (для работы с секретами будет отдеьная привилегированная роль)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: admin-role
+rules:
+  - apiGroups: [ "", "extensions", "apps" ]
+    resources: ["deployments", "pods", "services", "replicasets"]
+    verbs: [ "get", "list", "watch", "create", "update", "delete", "patch" ]
