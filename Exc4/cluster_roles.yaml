@@ -1,3 +1,28 @@
+# Роль для управления секретами.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secret-manager
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "configmaps", "secrets" ]
+    verbs: [ "get", "list", "watch", "create", "update", "delete", "patch" ]
+
+---
+# Роль для управления развертыванием подов без возможности изменять другие ресурсы. Может просматривать больше ресурсов, чем разработчики
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: devops-role
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "pods"]
+    verbs: [ "get", "list", "watch", "create", "update", "delete", "patch" ]
+  - apiGroups: [ "", "extensions", "apps" ]
+    resources: [ "deployments", "services", "replicasets", "daemonsets", "events" ]
+    verbs: [ "get", "list", "watch" ]
+
+---
 # Роли для разработчиков. Разрешено просматривать ресурсы, но не секреты
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -5,16 +30,16 @@ metadata:
   name: developer-role
 rules:
   - apiGroups: [ "", "extensions", "apps" ]
-    resources: ["deployments", "pods", "services", "replicasets" ]
+    resources: [ "deployments", "pods", "services", "replicasets" ]
     verbs: [ "get", "list", "watch" ]
 
 ---
-# Роли для управляющих кластером. Разрешено просматривать и редактировать ресурсы, но не секреты (для работы с секретами будет отдеьная привилегированная роль)
+# Роли для управляющих кластером. Разрешено просматривать и редактировать ресурсы, но не секреты (для работы с секретами будет отдельная привилегированная роль)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: admin-role
 rules:
   - apiGroups: [ "", "extensions", "apps" ]
-    resources: ["deployments", "pods", "services", "replicasets"]
+    resources: [ "deployments", "pods", "services", "replicasets", "daemonsets" ]
     verbs: [ "get", "list", "watch", "create", "update", "delete", "patch" ]

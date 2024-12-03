@@ -1,4 +1,4 @@
-# Назначение роли для сервисного аккаунта developer
+# Назначение роли для аккаунта developer
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -12,7 +12,7 @@ roleRef:
   apiGroup: ""
 
 ---
-# Назначение роли для сервисного аккаунта admin
+# Назначение роли для аккаунта admin
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -23,4 +23,32 @@ subjects:
 roleRef:
   kind: ClusterRole
   name: admin-role
+  apiGroup: ""
+
+---
+# Назначение роли для аккаунта security
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: secret-manager-binding
+subjects:
+  - kind: User
+    name: security
+roleRef:
+  kind: ClusterRole
+  name: secret-manager
+  apiGroup: ""
+
+---
+# Назначение роли для аккаунта devops
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: devops-role-binding
+subjects:
+  - kind: User
+    name: devops
+roleRef:
+  kind: ClusterRole
+  name: devops-role
   apiGroup: ""

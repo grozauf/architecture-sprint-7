@@ -1,5 +1,3 @@
-# для egress по дефолту ограничений нет. ограничиваем только по входящему трафику
-
 # разрешаем фронту ходить к бэку
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -11,8 +9,14 @@ spec:
       role: back-end-api
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          role: front-end
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           role: front-end
@@ -29,8 +33,14 @@ spec:
       role: front-end
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          role: back-end-api
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           role: back-end-api
@@ -48,8 +58,14 @@ spec:
       role: admin-back-end-api
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          role: admin-front-end
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           role: admin-front-end
@@ -65,8 +81,14 @@ spec:
       role: admin-front-end
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          role: admin-back-end-api
+  egress:
+  - to:
     - podSelector:
         matchLabels:
           role: admin-back-end-api
